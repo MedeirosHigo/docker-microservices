@@ -1,7 +1,6 @@
 version: '2'
 services:
-# os microservice estao como hello-world por que ao realizar o teste ele indica o container acessado, estou fazendo mudanças para ficar correto.
-    microservice1:
+ microservice1:
         image: php:7.0-apache
         ports:
             - 8080
