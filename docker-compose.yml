@@ -1,0 +1,65 @@
+version: '2'
+services:
+# os microservice estao como hello-world por que ao realizar o teste ele indica o container acessado, estou fazendo mudanças para ficar correto.
+    microservice1:
+        image: php:7.0-apache
+        ports:
+            - 8080
+        #container_name: microservice1
+        restart: always
+        environment:
+            - VIRTUAL_HOST=microservice1:8080
+        volumes: 
+            - ./www/wordpress:/var/www/html/wordpress
+        #networks:
+        #    n_default:
+        #        ipv4_address: 172.19.0.2
+    microservice2:
+        image: php:5.6-apache
+        ports:
+            - 8080
+        #container_name: microservice2
+        restart: always
+        environment:
+            - VIRTUAL_HOST=microservice2:8080
+        volumes: 
+            - ./www/joomla:/var/www/html/joomla
+       # networks:
+        #    n_default:
+         #       ipv4_address: 172.19.0.3
+    database1:
+        image: mysql:latest
+        container_name: database
+        restart: always
+        ports:
+            - 8080
+        volumes:
+            - ./db_data:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: 123
+            MYSQL_DATABASE: uepa
+            MYSQL_USER: uepa
+            MYSQL_PASSWORD: uepa
+        #networks:
+        #    n_default:
+        #        ipv4_address: 172.19.0.4     
+    mynginx:
+        build: .
+        container_name: mynginx
+        image: mynginx:latest
+        ports:
+            -  80:80 
+        links:
+            - microservice1
+            - microservice2
+        volumes:
+            - /var/run/docker.sock:/tmp/docker.sock:ro
+        #networks:
+        #    n_default:
+        #        ipv4_address: 172.19.0.5
+#networks:
+    #n_default:
+     #   driver: bridge
+    #    ipam:
+      #      config:
+       #         - subnet: 172.19.0.0/16
